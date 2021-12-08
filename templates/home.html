@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>主页</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/css/layui.css" media="all">
+    <style type="text/css">
+        .btn-ncut {
+            border: 0;
+            background-color: transparent;
+            outline: none;
+            color: #c2c2c2;
+            cursor: pointer;
+        }
+
+        .a-ncut {
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript" src="/static/layui.js"></script>
+    <script type="text/javascript" src="/static/jquery-3.6.0.min.js"></script>
+    <script>
+        function jump() {
+            window.location.hash = "#" + "{{ anchor }}";
+        }
+    </script>
+    <script src="/static/Highcharts-9.1.0/code/highcharts.js"></script>
+    <script src="/static/Highcharts-9.1.0/code/modules/exporting.js"></script>
+    <script src="/static/Highcharts-9.1.0/code/highcharts-zh_CN.js"></script>
+</head>
+
+<body onload="jump()">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo layui-hide-xs layui-bg-black">NCUT学生选课系统</div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+                    <a href="javascript:;">
+                        <img src="/static/images/ncut.jpeg" class="layui-nav-img">
+                        {{ request.session.username }}
+                    </a>
+                </li>
+                <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+                    <form action="/home/" method="GET">
+                        <button name="logout" type="submit" value="True" class="btn-ncut">注销</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="a-ncut" href="javascript:;">我</a>
+                        <dl class="layui-nav-child" style="text-align: center;">
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="myprofile" class="btn-ncut">我的资料</button>
+                                </form>
+                            </dd>
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="message" class="btn-ncut">我的信箱</button>
+                                </form>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a class="a-ncut" href="javascript:;">课程</a>
+                        <dl class="layui-nav-child" style="text-align: center;">
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="findcourse" class="btn-ncut">查找课程</button>
+                                </form>
+                            </dd>
+                            {% if request.session.usertype == 3 %}
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="selectcourse"
+                                        class="btn-ncut">选修课程</button>
+                                </form>
+                            </dd>
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="mycourse" class="btn-ncut">个人课表</button>
+                                </form>
+                            </dd>
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="xzkj" class="btn-ncut">下载课件</button>
+                                </form>
+                            </dd>
+                            {% else %}
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="kcmanage" class="btn-ncut">课程管理</button>
+                                </form>
+                            </dd>
+                            {% endif %}
+                            {% if request.session.usertype == 2 %}
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="addscore" class="btn-ncut">录入成绩</button>
+                                </form>
+                            </dd>
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="fbkj" class="btn-ncut">发布课件</button>
+                                </form>
+                            </dd>
+                            {% elif request.session.usertype == 1 or request.session.usertype == 0 %}
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="cjmg" class="btn-ncut">成绩管理</button>
+                                </form>
+                            </dd>
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="xkmg" class="btn-ncut">选课管理</button>
+                                </form>
+                            </dd>
+                            {% if request.session.usertype == 1 %}
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="chouqian" class="btn-ncut">抽签</button>
+                                </form>
+                            </dd>
+                            {% endif %}
+                            {% endif %}
+                        </dl>
+                    </li>
+                    {% if request.session.usertype == 1 or request.session.usertype == 0 %}
+                    <li class="layui-nav-item">
+                        <a class="a-ncut" href="javascript:;">用户</a>
+                        <dl class="layui-nav-child" style="text-align: center;">
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="xsmanage" class="btn-ncut">学生管理</button>
+                                </form>
+                            </dd>
+                            <dd>
+                                <form action="/home/" method="GET">
+                                    <button name="func" type="submit" value="jsmanage" class="btn-ncut">教师管理</button>
+                                </form>
+                            </dd>
+                        </dl>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="layui-body">
+            {% if func == 'myprofile' %}
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">我的资料</legend>
+            </fieldset>
+            <div class="layui-form">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>用户ID</th>
+                            <th>姓名</th>
+                            <th>用户类型</th>
+                            <th>部门</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ request.session.userid }}</td>
+                            <td>{{ request.session.username }}</td>
+                            <td>
+                                {% if request.session.usertype == 0 %}
+                                系统管理员
+                                {% elif request.session.usertype == 1 %}
+                                学院管理员
+                                {% elif request.session.usertype == 2 %}
+                                教师
+                                {% elif request.session.usertype == 3 %}
+                                学生
+                                {% endif %}
+                            </td>
+                            <td>{{ usercollege }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% elif func == 'message' %}
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">收件箱</legend>
+            </fieldset>
+            {% if messagenumr == 0 %}
+            <div align="center">
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    您的收件箱为空！试试发一条信息吧！
+                </blockquote>
+            </div>
+            {% else %}
+            <div align="center">
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    您的收件箱中有 {{ messagenumr }} 条信息！
+                </blockquote>
+            </div>
+            <div class="layui-form">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>寄信人ID</th>
+                            <th>寄信人姓名</th>
+                            <th>时间</th>
+                            <th>内容</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in messagelistr %}
+                        <tr>
+                            <td>{{ message.sentid }}</td>
+                            <td>{{ message.sentname }}</td>
+                            <td>{{ message.messagetime }}</td>
+                            <td>{{ message.content }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            </br>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">发件箱</legend>
+            </fieldset>
+            {% if messagenums == 0 %}
+            <div align="center">
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    您的发件箱为空！试试发一条信息吧！
+                </blockquote>
+            </div>
+            {% else %}
+            <div align="center">
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    您已经发送 {{ messagenums }} 条信息！
+                </blockquote>
+            </div>
+            <div class="layui-form">
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>收信人ID</th>
+                            <th>收信人姓名</th>
+                            <th>时间</th>
+                            <th>内容</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in messagelists %}
+                        <tr>
+                            <td>{{ message.receiveid }}</td>
+                            <td>{{ message.receivename }}</td>
+                            <td>{{ message.messagetime }}</td>
+                            <td>{{ message.content }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            <div id="anchor_messagefind">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">通讯录</legend>
+            </fieldset>
+            <script type="text/javascript">
+                form.render();
+            </script>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="messageusername" lay-verify="title" autocomplete="off"
+                            placeholder="请输入用户姓名" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="radio" name="messageusercollege" value="信息学院" title="信息学院" checked="">
+                        <input type="radio" name="messageusercollege" value="理学院" title="理学院">
+                        <input type="radio" name="messageusercollege" value="文法学院" title="文法学院">
+                        <input type="radio" name="messageusercollege" value="教务处" title="教务处">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="radio" name="messageusertype" value="3" title="学生" checked="">
+                        <input type="radio" name="messageusertype" value="2" title="教师">
+                        <input type="radio" name="messageusertype" value="1" title="学院管理员">
+                        <input type="radio" name="messageusertype" value="0" title="系统管理员">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="messagefind"
+                            value="True">查找</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if ismessagefind is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        请选择用户所在部门与用户类型，姓名为可选模糊查询字段！
+                    </blockquote>
+                    {% elif ismessagefind == 'True' %}
+                    {% if messagefindnum == 0 %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        没有找到您要找的用户！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        找到了以下 {{ messagefindnum }} 条结果：
+                    </blockquote>
+                    <div class="layui-form">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>用户ID</th>
+                                    <th>姓名</th>
+                                    <th>用户类型</th>
+                                    <th>部门</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for finduser in messagefindlist %}
+                                <tr>
+                                    <td>{{ finduser.userid }}</td>
+                                    <td>{{ finduser.username }}</td>
+                                    <td>{{ finduser.usertype }}</td>
+                                    <td>{{ finduser.usercollege }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {% elif ismessagefind == 'False' %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        信息格式错误，请重新输入！
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_messagesent">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">寄信</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="sentuserid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入收信人ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text" align="center">
+                    <div class="layui-input-block">
+                        <textarea name="sentcontent" placeholder="请输入信件内容" class="layui-textarea"
+                            style="width:800px"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="messagesent"
+                            value="True">寄信</button>
+                        <button type=" submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="messagerefresh"
+                            value="True">刷新信箱</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if ismessagesent is None %}
+                    <blockquote class=" layui-elem-quote" style="width:1000px">
+                        输入收信人ID与内容，点击按钮即可寄信！
+                    </blockquote>
+                    {% elif ismessagesent == 'True' %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        寄信成功！
+                    </blockquote>
+                    {% elif ismessagesent == 'False' %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        信息格式错误，请重新输入！
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            {% elif func == 'xsmanage' %}
+            </br>
+            <div align="center">
+                {% if request.session.usertype == 0 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    系统管理员您好，您可以管理全校的学生！
+                </blockquote>
+                {% elif request.session.usertype == 1 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    学院管理员您好，您可以管理{{ usercollege }}的学生！
+                </blockquote>
+                {% endif %}
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">增加学生用户</legend>
+            </fieldset>
+            <script type="text/javascript">
+                form.render();
+            </script>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="newxsid" lay-verify="title" autocomplete="off" placeholder="请输入学生ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="password" name="newxspassword" placeholder="请输入密码" autocomplete="off"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="password" name="newxsrecpassword" placeholder="请再次输入密码" autocomplete="off"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="newxsname" lay-verify="title" autocomplete="off" placeholder="请输入学生姓名"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                {% if request.session.usertype == 0 %}
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="radio" name="newxscollege" value="信息学院" title="信息学院" checked="">
+                        <input type="radio" name="newxscollege" value="理学院" title="理学院">
+                        <input type="radio" name="newxscollege" value="文法学院" title="文法学院">
+                    </div>
+                </div>
+                {% endif %}
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="newstu"
+                            value="True">增加</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isnewstu is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入信息，点击按钮即可增加学生用户！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ newstumsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_delstu">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">删除学生用户</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="delxsid" lay-verify="title" autocomplete="off" placeholder="请输入学生ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="delstu"
+                            value="True">删除</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isdelstu is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入学生ID，点击按钮即可删除学生用户！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ delstumsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_altstu">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">修改学生用户</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="altxsid" lay-verify="title" autocomplete="off" placeholder="请输入学生ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="password" name="altxspassword" placeholder="请输入密码" autocomplete="off"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="password" name="altxsrecpassword" placeholder="请再次输入密码" autocomplete="off"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="altxsname" lay-verify="title" autocomplete="off" placeholder="请输入学生姓名"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                {% if request.session.usertype == 0 %}
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="radio" name="altxscollege" value="不修改" title="不修改" checked="">
+                        <input type="radio" name="altxscollege" value="信息学院" title="信息学院">
+                        <input type="radio" name="altxscollege" value="理学院" title="理学院">
+                        <input type="radio" name="altxscollege" value="文法学院" title="文法学院">
+                    </div>
+                </div>
+                {% endif %}
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="altstu"
+                            value="True">修改</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isaltstu is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入学生ID，并输入或选择将要修改的信息，点击按钮即可修改！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ altstumsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            {% elif func == 'jsmanage' %}
+            </br>
+            <div align="center">
+                {% if request.session.usertype == 0 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    系统管理员您好，您可以管理全校的教师！
+                </blockquote>
+                {% elif request.session.usertype == 1 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    学院管理员您好，您可以管理{{ usercollege }}的教师！
+                </blockquote>
+                {% endif %}
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">增加教师用户</legend>
+            </fieldset>
+            <script type="text/javascript">
+                form.render();
+            </script>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="newjsid" lay-verify="title" autocomplete="off" placeholder="请输入教师ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="password" name="newjspassword" placeholder="请输入密码" autocomplete="off"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="password" name="newjsrecpassword" placeholder="请再次输入密码" autocomplete="off"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="newjsname" lay-verify="title" autocomplete="off" placeholder="请输入教师姓名"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                {% if request.session.usertype == 0 %}
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="radio" name="newjscollege" value="信息学院" title="信息学院" checked="">
+                        <input type="radio" name="newjscollege" value="理学院" title="理学院">
+                        <input type="radio" name="newjscollege" value="文法学院" title="文法学院">
+                    </div>
+                </div>
+                {% endif %}
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="newjs"
+                            value="True">增加</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isnewjs is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入信息，点击按钮即可增加教师用户！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ newjsmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_deljs">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">删除教师用户</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="deljsid" lay-verify="title" autocomplete="off" placeholder="请输入教师ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="deljs"
+                            value="True">删除</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isdeljs is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入教师ID，点击按钮即可删除教师用户！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ deljsmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_altjs">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">修改教师用户</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="altjsid" lay-verify="title" autocomplete="off" placeholder="请输入教师ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="password" name="altjspassword" placeholder="请输入密码" autocomplete="off"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="password" name="altjsrecpassword" placeholder="请再次输入密码" autocomplete="off"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="altjsname" lay-verify="title" autocomplete="off" placeholder="请输入教师姓名"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                {% if request.session.usertype == 0 %}
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="radio" name="altjscollege" value="不修改" title="不修改" checked="">
+                        <input type="radio" name="altjscollege" value="信息学院" title="信息学院">
+                        <input type="radio" name="altjscollege" value="理学院" title="理学院">
+                        <input type="radio" name="altjscollege" value="文法学院" title="文法学院">
+                    </div>
+                </div>
+                {% endif %}
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="altjs"
+                            value="True">修改</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isaltjs is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入教师ID，并输入或选择将要修改的信息，点击按钮即可修改！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ altjsmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            {% elif func == 'findcourse' %}
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">查找课程</legend>
+            </fieldset>
+            <script type="text/javascript">
+                form.render();
+            </script>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="findcoursename" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程名称" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="findcoursejsname" lay-verify="title" autocomplete="off"
+                            placeholder="请输入教师姓名" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="radio" name="findcoursecollege" value="信息学院" title="信息学院" checked="">
+                        <input type="radio" name="findcoursecollege" value="理学院" title="理学院">
+                        <input type="radio" name="findcoursecollege" value="文法学院" title="文法学院">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="radio" name="findcoursecq" value="0" title="未抽签" checked="">
+                        <input type="radio" name="findcoursecq" value="1" title="已抽签">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="fdcourse"
+                            value="True">查找</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isfdcourse is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        请选择开课学院与是否已抽签，课程名称与教师姓名为可选模糊查询字段！
+                    </blockquote>
+                    {% elif isfdcourse == 'True' %}
+                    {% if fdcoursenum == 0 %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        没有找到您要找的课程！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        找到了以下 {{ fdcoursenum }} 条结果：
+                    </blockquote>
+                    <div class="layui-form">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="100">
+                                <col width="100">
+                                <col>
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>课程ID</th>
+                                    <th>课程名称</th>
+                                    <th>教师姓名</th>
+                                    <th>开课学院</th>
+                                    <th>是否已抽签</th>
+                                    <th>课堂容量</th>
+                                    <th>课程介绍</th>
+                                    <th>先修课程</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for fdcs in fdcourselist %}
+                                <tr>
+                                    <td>{{ fdcs.courseid }}</td>
+                                    <td>{{ fdcs.coursename }}</td>
+                                    <td>{{ fdcs.teachername }}</td>
+                                    <td>{{ fdcs.coursecollege }}</td>
+                                    <td>{{ fdcs.isdrawlots }}</td>
+                                    <td>{{ fdcs.maxnum }}</td>
+                                    <td>{{ fdcs.introduce }}</td>
+                                    <td>{{ fdcs.precourse }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {% elif isfdcourse == 'False' %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        信息格式错误，请重新输入！
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            {% elif func == 'kcmanage' %}
+            </br>
+            <div align="center">
+                {% if request.session.usertype == 0 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    系统管理员您好，您可以管理全校的课程！
+                </blockquote>
+                {% elif request.session.usertype == 1 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    学院管理员您好，您可以管理{{ usercollege }}的课程！
+                </blockquote>
+                {% elif request.session.usertype == 2 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    老师您好，您可以管理您自己开设的课程！
+                </blockquote>
+                {% endif %}
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">课程与成绩名单</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgfdid" lay-verify="title" autocomplete="off" placeholder="请输入课程ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="kcmgfd"
+                            value="True">生成</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iskcmgfd is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        请输入课程ID并点击按钮即可生成名单！
+                    </blockquote>
+                    {% elif iskcmgfd == 'True' %}
+                    {% if kcmgfdnum == 0 %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        没有学生选修这门课程！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        课程名单与成绩信息如下所示：
+                    </blockquote>
+                    <div class="layui-form">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>选课人数</th>
+                                    <th>及格率</th>
+                                    <th>不及格人数（0-59）</th>
+                                    <th>良好人数（60-85）</th>
+                                    <th>优秀人数（86-100）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ kcmgfdnum }}</td>
+                                    <td>{{ passratio }}</td>
+                                    <td>{{ failnum }}</td>
+                                    <td>{{ goodnum }}</td>
+                                    <td>{{ outstandingnum }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="layui-form">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>课程ID</th>
+                                    <th>课程名称</th>
+                                    <th>学生ID</th>
+                                    <th>学生姓名</th>
+                                    <th>课程成绩</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for kt in kcmgfdlist %}
+                                <tr>
+                                    <td>{{ kt.courseid }}</td>
+                                    <td>{{ kt.coursename }}</td>
+                                    <td>{{ kt.studentid }}</td>
+                                    <td>{{ kt.studentname }}</td>
+                                    <td>{{ kt.score }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {% elif iskcmgfd == 'False' %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        信息格式错误，请重新输入！
+                    </blockquote>
+                    {% elif iskcmgfd == 'Fail' %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        权限不足，无法查看，请重新输入！
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_kcmgnew">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">增加课程</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgnewid" lay-verify="title" autocomplete="off" placeholder="请输入课程ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgnewname" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程名称" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                {% if request.session.usertype != 2 %}
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgnewjsid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入教师ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                {% endif %}
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgnewmaxnum" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课堂容量" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text" align="center">
+                    <div class="layui-input-block">
+                        <textarea name="kcmgnewct" placeholder="请输入课程介绍" class="layui-textarea"
+                            style="width:800px"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="kcmgnew"
+                            value="True">增加</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iskcmgnew is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程信息，点击按钮即可增加课程！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ kcmgnewmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_kcmgdel">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">删除课程</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgdelid" lay-verify="title" autocomplete="off" placeholder="请输入课程ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="kcmgdel"
+                            value="True">删除</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iskcmgdel is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID，点击按钮即可删除课程！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ kcmgdelmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_kcmgalt">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">修改课程</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgaltid" lay-verify="title" autocomplete="off" placeholder="请输入课程ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgaltname" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程名称" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                {% if request.session.usertype != 2 %}
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgaltjsid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入教师ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                {% endif %}
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgaltmaxnum" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课堂容量" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text" align="center">
+                    <div class="layui-input-block">
+                        <textarea name="kcmgaltct" placeholder="请输入课程介绍" class="layui-textarea"
+                            style="width:800px"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="kcmgalt"
+                            value="True">修改</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iskcmgalt is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID，并输入将要修改的信息，点击按钮即可修改！！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ kcmgaltmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_kcmgxx">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">先修课管理</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgxxid" lay-verify="title" autocomplete="off" placeholder="请输入课程ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgxxpid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入先修课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="kcmgxx"
+                            value="True">设置</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iskcmgxx is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID与先修课程ID，点击按钮即可设置先修课程！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ kcmgxxmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_kcmgxxdel">
+                </br>
+                </br>
+            </div>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgxxdelid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgxxdelpid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入先修课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="kcmgxxdel"
+                            value="True">删除</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iskcmgxxdel is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID与先修课程ID，点击按钮即可删除先修课程！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ kcmgxxdelmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_kcmgxxalt">
+                </br>
+                </br>
+            </div>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgxxaltid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgxxaltpid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入原先修课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="kcmgxxaltnid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入新先修课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="kcmgxxalt"
+                            value="True">修改</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iskcmgxxalt is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID与原先修课程ID以及新先修课程ID，点击按钮即可修改！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ kcmgxxaltmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            {% if request.session.usertype == 0 %}
+            <div id="anchor_kcmgchart">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">选课统计图</legend>
+            </fieldset>
+            </br>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="kcmgchart"
+                            value="True">生成</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iskcmgchart is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        点击按钮即可一键生成选课柱状统计图！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        选课统计图已生成！
+                    </blockquote>
+                    </br>
+                    <div id="container" style="min-width:400px;height:400px"></div>
+                    <script>
+                        var chart = Highcharts.chart('container', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: '选课统计图'
+                            },
+                            xAxis: {
+                                type: 'category',
+                                labels: {
+                                    rotation: -45
+                                }
+                            },
+                            yAxis: {
+                                min: 0,
+                                title: {
+                                    text: '人数'
+                                }
+                            },
+                            legend: {
+                                enabled: false
+                            },
+                            tooltip: {
+                                pointFormat: '人数: <b>{point.y:.0f}</b>'
+                            },
+                            series: [{
+                                name: '人数',
+                                data: [
+                                    {% for ct in ctlist %}
+                            ["{{ ct.name }}", {{ ct.num }} ],
+                            {% endfor %}
+                                ],
+                        dataLabels: {
+                            enabled: true,
+                                rotation: -90,
+                                    color: '#FFFFFF',
+                                        align: 'right',
+                                            format: '{point.y:.0f}',
+                                                y: 10
+                        }
+                            }]
+                        });
+                    </script>
+                    {% endif %}
+                </div>
+            </form>
+            {% endif %}
+            {% elif func == 'selectcourse' %}
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">选修课程</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="xkid" lay-verify="title" autocomplete="off" placeholder="请输入课程ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="xk"
+                            value="True">选课</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isxk is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID，点击按钮即可选课！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ xkmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_xkjl">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">选修记录</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="xkjl"
+                            value="True">查看</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isxkjl is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        点击按钮即可查看选课记录！
+                    </blockquote>
+                    {% else %}
+                    {% if xkjlnum == 0 %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        您还没有选课！！！！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        您有 {{ xkjlnum }} 条选课记录！
+                    </blockquote>
+                    <div class="layui-form">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>课程ID</th>
+                                    <th>课程名称</th>
+                                    <th>是否中签</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for xl in xkjllist %}
+                                <tr>
+                                    <td>{{ xl.courseid }}</td>
+                                    <td>{{ xl.coursename }}</td>
+                                    <td>{{ xl.iszq }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </form>
+            {% elif func == 'mycourse' %}
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">个人课表</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div align="center">
+                    {% if mcnum == 0 %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        您的课表是空的！！！快去选课吧！！！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        您有 {{ mcnum }} 门课程！
+                    </blockquote>
+                    <div class="layui-form">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>课程ID</th>
+                                    <th>课程名称</th>
+                                    <th>成绩</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mc in mclist %}
+                                <tr>
+                                    <td>{{ mc.courseid }}</td>
+                                    <td>{{ mc.coursename }}</td>
+                                    <td>{{ mc.score }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                </div>
+            </form>
+            {% elif func == 'chouqian' %}
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">抽签</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cqid" lay-verify="title" autocomplete="off" placeholder="请输入课程ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="cq"
+                            value="True">抽签</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iscq is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID并点击按钮即可抽签！
+                    </blockquote>
+                    {% elif iscq == 'False' %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ cqmsg }}
+                    </blockquote>
+                    {% elif iscq == 'True' %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        抽签成功！本次 {{ cqnum }} 名同学中签，最大课堂容量为 {{ maxnum }} ，中签名单如下：
+                    </blockquote>
+                    <div class="layui-form">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>课程ID</th>
+                                    <th>课程名称</th>
+                                    <th>学生ID</th>
+                                    <th>学生姓名</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cl in cqlist %}
+                                <tr>
+                                    <td>{{ cl.courseid }}</td>
+                                    <td>{{ cl.coursename }}</td>
+                                    <td>{{ cl.studentid }}</td>
+                                    <td>{{ cl.studentname }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+            </form>
+            {% elif func == 'xkmg' %}
+            </br>
+            <div align="center">
+                {% if request.session.usertype == 0 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    系统管理员您好，您可以管理全校的选课！
+                </blockquote>
+                {% elif request.session.usertype == 1 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    学院管理员您好，您可以管理{{ usercollege }}的选课！
+                </blockquote>
+                {% endif %}
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">选课查询</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="xkmgcxcoursename" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程名称" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="xkmgcxxsname" lay-verify="title" autocomplete="off"
+                            placeholder="请输入学生姓名" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="radio" name="xkmgcxcollege" value="信息学院" title="信息学院" checked="">
+                        <input type="radio" name="xkmgcxcollege" value="理学院" title="理学院">
+                        <input type="radio" name="xkmgcxcollege" value="文法学院" title="文法学院">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="xkmgcx"
+                            value="True">查询</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isxkmgcx is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        请选择开课学院，课程名称与学生姓名为可选模糊查询字段！
+                    </blockquote>
+                    {% elif isxkmgcx == 'False' %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ xkmgcxmsg }}
+                    </blockquote>
+                    {% elif isxkmgcx == 'True' %}
+                    {% if xkmgcxnum == 0 %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        没有找到您要找的选课记录！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        找到了以下 {{ xkmgcxnum }} 条结果：
+                    </blockquote>
+                    <div class="layui-form">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>课程ID</th>
+                                    <th>课程名称</th>
+                                    <th>学生ID</th>
+                                    <th>学生姓名</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for xl in xkmgcxlist %}
+                                <tr>
+                                    <td>{{ xl.courseid }}</td>
+                                    <td>{{ xl.coursename }}</td>
+                                    <td>{{ xl.studentid }}</td>
+                                    <td>{{ xl.studentname }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_xkmgnew">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">增加选课</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="xkmgnewcourseid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="xkmgnewxsid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入学生ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="xkmgnew"
+                            value="True">增加</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isxkmgnew is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID与学生ID，点击按钮即可增加！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ xkmgnewmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_xkmgdel">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">删除选课</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="xkmgdelcourseid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="xkmgdelxsid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入学生ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="xkmgdel"
+                            value="True">删除</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isxkmgdel is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID与学生ID，点击按钮即可删除！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ xkmgdelmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_xkmgalt">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">修改选课</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="xkmgaltcourseid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入原课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="xkmgaltncourseid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入新课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="xkmgaltxsid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入学生ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="xkmgalt"
+                            value="True">修改</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isxkmgalt is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID与学生ID，点击按钮即可修改！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ xkmgaltmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            {% elif func == 'addscore' %}
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">录入成绩</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="adscourseid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="adsxsid" lay-verify="title" autocomplete="off" placeholder="请输入学生ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="adssc" lay-verify="title" autocomplete="off" placeholder="请输入成绩"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="ads"
+                            value="True">录入</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isads is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID与学生ID以及成绩，点击按钮即可录入！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ adsmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            {% elif func == 'cjmg' %}
+            </br>
+            <div align="center">
+                {% if request.session.usertype == 0 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    系统管理员您好，您可以管理全校的成绩！
+                </blockquote>
+                {% elif request.session.usertype == 1 %}
+                <blockquote class="layui-elem-quote" style="width:1000px">
+                    学院管理员您好，您可以管理{{ usercollege }}的成绩！
+                </blockquote>
+                {% endif %}
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">成绩查询</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cjmgcxcoursename" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程名称" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cjmgcxxsname" lay-verify="title" autocomplete="off"
+                            placeholder="请输入学生姓名" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                {% if request.session.usertype == 0 %}
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="radio" name="cjmgcxcollege" value="信息学院" title="信息学院" checked="">
+                        <input type="radio" name="cjmgcxcollege" value="理学院" title="理学院">
+                        <input type="radio" name="cjmgcxcollege" value="文法学院" title="文法学院">
+                    </div>
+                </div>
+                {% endif %}
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="cjmgcx"
+                            value="True">查询</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iscjmgcx is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        课程名称与学生姓名为可选模糊查询字段！
+                    </blockquote>
+                    {% elif iscjmgcx == 'False' %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ cjmgcxmsg }}
+                    </blockquote>
+                    {% elif iscjmgcx == 'True' %}
+                    {% if cjmgcxnum == 0 %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        没有找到您要找的成绩记录！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        找到了以下 {{ cjmgcxnum }} 条结果：
+                    </blockquote>
+                    <div class="layui-form">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                                <col width="150">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>课程ID</th>
+                                    <th>课程名称</th>
+                                    <th>学生ID</th>
+                                    <th>学生姓名</th>
+                                    <th>成绩</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for xl in cjmgcxlist %}
+                                <tr>
+                                    <td>{{ xl.courseid }}</td>
+                                    <td>{{ xl.coursename }}</td>
+                                    <td>{{ xl.studentid }}</td>
+                                    <td>{{ xl.studentname }}</td>
+                                    <td>{{ xl.score }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_cjmgnew">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">增加成绩</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cjmgnewcourseid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cjmgnewxsid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入学生ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cjmgnewsc" lay-verify="title" autocomplete="off" placeholder="请输入成绩"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="cjmgnew"
+                            value="True">增加</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iscjmgnew is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID与学生ID以及成绩，点击按钮即可增加！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ cjmgnewmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_cjmgdel">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">删除成绩</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cjmgdelcourseid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cjmgdelxsid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入学生ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="cjmgdel"
+                            value="True">删除</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iscjmgdel is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID与学生ID，点击按钮即可删除！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ cjmgdelmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            <div id="anchor_cjmgalt">
+                </br>
+            </div>
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">修改成绩</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cjmgaltcourseid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入课程ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cjmgaltxsid" lay-verify="title" autocomplete="off"
+                            placeholder="请输入学生ID" class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="cjmgaltsc" lay-verify="title" autocomplete="off" placeholder="请输入新成绩"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="cjmgalt"
+                            value="True">修改</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if iscjmgalt is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID与学生ID以及新成绩，点击按钮即可修改！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ cjmgaltmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            {% elif func == 'fbkj' %}
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">发布课件</legend>
+            </fieldset>
+            <form enctype="multipart/form-data" class="layui-form" action="/home/" lay-filter="example" method="POST">
+                <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input type="text" name="fbkjid" lay-verify="title" autocomplete="off" placeholder="请输入课程ID"
+                            class="layui-input" style="width:800px">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-upload" align="center">
+                        <input type="button" value="选取文件" class="layui-btn layui-btn-normal" onclick="getFile()">
+                        <input style="display: none" type="file" name="kj" id="getF" onchange="clickF()">
+                        <button type="submit" class="layui-btn" id="test9">发布</button>
+                    </div>
+                </div>
+                <script>
+                    function getFile() {
+                        $("#getF").click();
+                    }
+                    var filename = "";
+                    function clickF() {
+                        filename = $("#getF").val();
+                        var filenames = filename.split("\\");
+                        filename = filenames[filenames.length - 1];
+                        $("#lb").text(filename);
+                    }
+                </script>
+                <!-- <div class="layui-form-item">
+                    <div class="layui-input-block" align="center">
+                        <input class="layui-elem-quote" type="file" name="kj" />
+                    </div>
+                </div>
+                <div class="layui-btn-container" align="center">
+                    <input class="layui-btn" type="submit" value="发布">
+                </div> -->
+                <div align="center">
+                    {% if isfbkj is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        输入课程ID，选取文件并点击发布按钮！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        {{ fbkjmsg }}
+                    </blockquote>
+                    {% endif %}
+                </div>
+            </form>
+            {% elif func == 'xzkj' %}
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend align="center">下载课件</legend>
+            </fieldset>
+            <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                <div class="layui-form-item">
+                    <div class="layui-btn-container" align="center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" name="xzkj"
+                            value="True">搜索</button>
+                    </div>
+                </div>
+                <div align="center">
+                    {% if isxzkj is None %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        请先点击按钮搜索课件！
+                    </blockquote>
+                    {% elif kjnum == 0 %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        没有可以下载的课件！
+                    </blockquote>
+                    {% else %}
+                    <blockquote class="layui-elem-quote" style="width:1000px">
+                        找到了以下 {{ kjnum }} 个课件！
+                    </blockquote>
+                    <form class="layui-form" action="/home/" lay-filter="example" method="GET">
+                        <div class="layui-form">
+                            <table class="layui-table">
+                                <colgroup>
+                                    <col width="150">
+                                    <col width="150">
+                                    <col width="150">
+                                    <col width="150">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>课程ID</th>
+                                        <th>课程名称</th>
+                                        <th>课件</th>
+                                        <th>下载链接</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for xl in kjlist %}
+                                    <tr>
+                                        <td>{{ xl.courseid }}</td>
+                                        <td>{{ xl.coursename }}</td>
+                                        <td>{{ xl.kjname }}</td>
+                                        <td>
+                                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1"
+                                                name="xzkjlink" value="{{ xl.link }}">下载</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+            </form>
+            {% endif %}
+            </br>
+            </br>
+            </br>
+            </br>
+            </br>
+        </div>
+        <div class="layui-footer" align="center">
+            基于Django与Layui，由北方工业大学信息学院计XX-X班XXX于2021年5月制作
+        </div>
+    </div>
+    <script>
+        layui.use(['element', 'layer', 'util'], function () {
+            var element = layui.element
+                , layer = layui.layer
+                , util = layui.util
+                , $ = layui.$;
+            util.event('lay-header-event', {
+                menuLeft: function (othis) {
+                    layer.msg('展开左侧菜单的操作', { icon: 0 });
+                }
+            });
+        });
+        layui.use('form', function () {
+            const form = layui.form;
+            form.render();
+        });
+    </script>
+    }
+    });
+    </script>
+</body>
