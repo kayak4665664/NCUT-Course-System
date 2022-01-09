@@ -1,12 +1,12 @@
 # NCUT-Course-System
 A course selection system. There are 4 types of users in the system: students, teachers, college administrators, and system administrators.  
-一个选课系统。系统中存在 4 类用户:学生、教师、学院管理员、系统管理员。
+一个选课系统。系统中存在 4 类用户：学生、教师、学院管理员、系统管理员。
 
 Time: 2021 Spring Semester
 
 ## Details 细节
-1. The system mainly uses the `Django`, and also uses `layui` for front-end design. 系统主要使用了 `Django` 框架，另外使用了 `layui` 用于前端设计。
-2. The database uses `Django models` based on `SQLite3`. 数据库使用了基于 `SQLite3` 的 `Django 模型`。
+1. The system mainly uses the `Django`, and also uses `layui` for front-end design. 系统主要使用了`Django`框架，另外使用了`layui`用于前端设计。
+2. The database uses `Django models` based on `SQLite3`. 数据库使用了基于`SQLite3`的`Django 模型`。
 
 ## Functions 功能
 - For all users 所有用户
